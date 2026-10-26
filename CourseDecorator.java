@@ -36,7 +36,6 @@ public class CourseDecorator extends AbstractStudent {
 		// of all the courses from all the CourseDecorators 
 		// attached to the test object. The code combines the
 		// delegate.getCourses() and this.toString().
-
 		return delegate.getCourses() + this.toString() + "\n";
 	}
 	public List<String> getCourseList() {
@@ -45,9 +44,18 @@ public class CourseDecorator extends AbstractStudent {
 		// DO NOT make a List here, rely on the delegate to return
 		// its list and add to that.
 		List<String> courses = delegate.getCourseList();
-		courses.add(this.toString());
-		return courses;
-	}
+        courses.add(this.toString());
+        return courses;
+    }
+
+    public boolean betweenStartAndEnd(LocalTime time) {
+        LocalTime start = startTime.minusMinutes(15);
+        LocalTime end = endTime.plusMinutes(15);
+
+        return time.equals(start)
+                || (time.isAfter(start) && time.isBefore(end));
+    }
+}
 	public boolean betweenStartAndEnd(LocalTime time) {
 		// TODO
 		// This method is only in CourseDecorator. It is not in 
@@ -59,7 +67,11 @@ public class CourseDecorator extends AbstractStudent {
 		// using the methods time.isAfter and time.isBefore 
 		// from the class LocalTime
 		// see https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/LocalTime.html
-		return time.equals(startTime.minusMinutes(15)) || (time.isAfter(startTime.minusMinutes(15)) && time.isBefore(endTime.plusMinutes(15)));
+		LocalTime start = startTime.minusMinutes(15);
+        LocalTime end = endTime.plusMinutes(15);
+
+        return time.equals(start)
+                || (time.isAfter(start) && time.isBefore(end));
 	}
 	public boolean timeConflict(LocalTime time) {
 		// TODO
@@ -67,11 +79,23 @@ public class CourseDecorator extends AbstractStudent {
 		// or other of time and time.plusHours(1)
 		// If you do not have a true value, return
 		// delegate.timeConflict(time)
-		if (betweenStartAndEnd(time) || betweenStartAndEnd(time.plusHours(1))) {
-			return true;
-		} 
-		return delegate.timeConflict(time);
+		if (betweenStartAndEnd(time)
+			|| betweenStartAndEnd(time.plusHours(1))) {
+		return true;
 	}
+	return delegate.timeConflict(time);
+	}
+
+    @Override
+    public String getUniversity() {
+        return delegate.getUniversity();
+    }
+
+    @Override
+    public void setUniversity(String university) {
+        delegate.setUniversity(university);
+    }
+	
 	@Override
 	public String toString() {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("h:mma");
@@ -80,16 +104,3 @@ public class CourseDecorator extends AbstractStudent {
 		return courseRubric + courseNumber + "-" + section + " "
 				+ courseTitle + "(" + credits + "cr), meets " + fStartTime + "-" + fEndTime;
 	}
-	
-	// TODO
-	// implement the other abstract methods in AbstractStudent
-	// using calls to the delegate
-	@Override
-	public String getUniversity() {
-		return delegate.getUniversity();
-	}
-	@Override
-	public void setUniversity(String university) {
-		delegate.setUniversity(university);
-	}
-}
