@@ -28,8 +28,10 @@ public class ConcreteStudent extends AbstractStudent {
 	// TODO
 	// implement any other missing method(s) in AbstractStudent
 	// even if they just return true or false
-	@Override 
+	@Override
 	public boolean timeConflict(LocalTime time) {
 		return false;
 	}
 }
+
+
